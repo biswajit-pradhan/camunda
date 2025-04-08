@@ -5,13 +5,20 @@
       <bpmn:outgoing>Flow_1jmkucc</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:endEvent id="Event_0kqysrv">
-      <bpmn:incoming>Flow_0dq5z1l</bpmn:incoming>
+      <bpmn:incoming>Flow_02ng9u6</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_1jmkucc" sourceRef="StartEvent_1" targetRef="Activity_0xdyutz" />
     <bpmn:sequenceFlow id="Flow_0aldk3d" sourceRef="Activity_0xdyutz" targetRef="Activity_1lx7fz3" />
     <bpmn:scriptTask id="Activity_0xdyutz" name="Initialize User Object" scriptFormat="JavaScript" camunda:resultVariable="userObj">
       <bpmn:extensionElements>
         <camunda:inputOutput>
+          <camunda:inputParameter name="userObj5">
+            <camunda:script scriptFormat="JavaScript">var obj={
+id:5,
+name:'Jon'
+};
+obj;</camunda:script>
+          </camunda:inputParameter>
           <camunda:outputParameter name="userObj2">
             <camunda:script scriptFormat="JavaScript">var obj={id:2,name:"Virat"};
 obj;</camunda:script>
@@ -28,13 +35,34 @@ obj;</camunda:script>
 var obj1={id:4,name:"Steve"};
 execution.setVariable("userObj4",obj1);
 print("userObj:: "+JSON.stringify(obj));
+print("userObj5:: "+JSON.stringify(userObj5));
 obj;</bpmn:script>
     </bpmn:scriptTask>
-    <bpmn:sequenceFlow id="Flow_0dq5z1l" sourceRef="Activity_1lx7fz3" targetRef="Event_0kqysrv" />
+    <bpmn:sequenceFlow id="Flow_0dq5z1l" sourceRef="Activity_1lx7fz3" targetRef="Activity_1rm7qp2" />
     <bpmn:scriptTask id="Activity_1lx7fz3" name="Initilize Department Object" scriptFormat="JavaScript" camunda:resource="initialize_department.js">
       <bpmn:incoming>Flow_0aldk3d</bpmn:incoming>
       <bpmn:outgoing>Flow_0dq5z1l</bpmn:outgoing>
     </bpmn:scriptTask>
+    <bpmn:sequenceFlow id="Flow_02ng9u6" sourceRef="Activity_1rm7qp2" targetRef="Event_0kqysrv" />
+    <bpmn:serviceTask id="Activity_1rm7qp2" name="Fetch Email Id" camunda:class="com.biswajit.delegates.FetchEmailDelegate">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="userIdInput">
+            <camunda:script scriptFormat="JavaScript">var a=2;
+a;</camunda:script>
+          </camunda:inputParameter>
+          <camunda:outputParameter name="temp">
+            <camunda:script scriptFormat="JavaScript">print("userEmailIdFromDelegate:: "+userEmailIdFromDelegate);
+
+userObj.emailId=userEmailIdFromDelegate;
+
+print("userObj with email:: "+JSON.stringify(userObj));</camunda:script>
+          </camunda:outputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0dq5z1l</bpmn:incoming>
+      <bpmn:outgoing>Flow_02ng9u6</bpmn:outgoing>
+    </bpmn:serviceTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="tasks_execute">
@@ -45,11 +73,15 @@ obj;</bpmn:script>
         <dc:Bounds x="220" y="77" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0kqysrv_di" bpmnElement="Event_0kqysrv">
-        <dc:Bounds x="762" y="99" width="36" height="36" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0mmf3fr_di" bpmnElement="Activity_1lx7fz3">
         <dc:Bounds x="470" y="77" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0kqysrv_di" bpmnElement="Event_0kqysrv">
+        <dc:Bounds x="872" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0zmuq4j_di" bpmnElement="Activity_1rm7qp2">
+        <dc:Bounds x="660" y="77" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_1jmkucc_di" bpmnElement="Flow_1jmkucc">
@@ -62,7 +94,11 @@ obj;</bpmn:script>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0dq5z1l_di" bpmnElement="Flow_0dq5z1l">
         <di:waypoint x="570" y="117" />
-        <di:waypoint x="762" y="117" />
+        <di:waypoint x="660" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_02ng9u6_di" bpmnElement="Flow_02ng9u6">
+        <di:waypoint x="760" y="117" />
+        <di:waypoint x="872" y="117" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

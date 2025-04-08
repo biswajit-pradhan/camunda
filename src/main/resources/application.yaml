@@ -8,3 +8,4 @@ camunda:
     generic-properties:
       properties:
         historyTimeToLive: 5
+server.port: 9090
