@@ -3,6 +3,7 @@ package com.biswajit.controller;
 import org.camunda.bpm.engine.ProcessEngine;
 import org.camunda.bpm.engine.ProcessEngines;
 import org.camunda.bpm.engine.runtime.ProcessInstantiationBuilder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,24 +16,23 @@ public class HomeController {
 		return "Today is a good day";
 	}
 
-	@RequestMapping(value = "/execute", method = RequestMethod.GET)
-	public String execute() {
+	@RequestMapping(value = "/execute/{processKey}", method = RequestMethod.GET)
+	public String execute(@PathVariable("processKey") String processKey) {
 		String item = "Computer";
 		ProcessEngine engine = ProcessEngines.getDefaultProcessEngine();
-		ProcessInstantiationBuilder instance = engine.getRuntimeService()
-				.createProcessInstanceByKey("first_bpmn_execute");
+		ProcessInstantiationBuilder instance = engine.getRuntimeService().createProcessInstanceByKey(processKey);
 		instance.setVariable("itemName", item);
 		instance.businessKey("execute-endpoint");
 		instance.executeWithVariablesInReturn();
-		return "BPMN executed";
+		return "BPMN executed :: "+processKey;
 	}
 
-	@RequestMapping(value = "/task", method = RequestMethod.GET)
-	public String task() {
-		ProcessEngine engine = ProcessEngines.getDefaultProcessEngine();
-		ProcessInstantiationBuilder instance = engine.getRuntimeService().createProcessInstanceByKey("tasks_execute");
-		instance.executeWithVariablesInReturn();
-		return "tasks BPMN executed";
-	}
+//	@RequestMapping(value = "/task", method = RequestMethod.GET)
+//	public String task() {
+//		ProcessEngine engine = ProcessEngines.getDefaultProcessEngine();
+//		ProcessInstantiationBuilder instance = engine.getRuntimeService().createProcessInstanceByKey("tasks_execute");
+//		instance.executeWithVariablesInReturn();
+//		return "tasks BPMN executed";
+//	}
 
 }
