@@ -23,9 +23,6 @@ id:1
 userObj;</bpmn:script>
     </bpmn:scriptTask>
     <bpmn:sequenceFlow id="Flow_1ty2xpg" sourceRef="Activity_1njxhp3" targetRef="Activity_1rap3m0" />
-    <bpmn:endEvent id="Event_0rbckpm">
-      <bpmn:incoming>Flow_1xhwg2f</bpmn:incoming>
-    </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_0dgiifq" sourceRef="Activity_02mll2r" targetRef="Activity_1njxhp3" />
     <bpmn:callActivity id="Activity_02mll2r" name="Assign Name and Email" calledElement="subprocess_name_email_execute">
       <bpmn:extensionElements>
@@ -59,56 +56,127 @@ print("userObj2 after call activity ::"+JSON.stringify(userObj2));</camunda:scri
         <camunda:out variables="all" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1ty2xpg</bpmn:incoming>
-      <bpmn:outgoing>Flow_1xhwg2f</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1ozgpdu</bpmn:outgoing>
     </bpmn:callActivity>
-    <bpmn:sequenceFlow id="Flow_1xhwg2f" sourceRef="Activity_1rap3m0" targetRef="Event_0rbckpm" />
+    <bpmn:subProcess id="Activity_1kyizg8" name="Assign Department Info">
+      <bpmn:incoming>Flow_1ozgpdu</bpmn:incoming>
+      <bpmn:outgoing>Flow_0en49zy</bpmn:outgoing>
+      <bpmn:startEvent id="Event_08uohli">
+        <bpmn:outgoing>Flow_1gysraj</bpmn:outgoing>
+      </bpmn:startEvent>
+      <bpmn:sequenceFlow id="Flow_1gysraj" sourceRef="Event_08uohli" targetRef="Activity_0n6zcj5" />
+      <bpmn:sequenceFlow id="Flow_0r375ko" sourceRef="Activity_0n6zcj5" targetRef="Activity_00izw75" />
+      <bpmn:endEvent id="Event_1awm4jl">
+        <bpmn:incoming>Flow_188d40q</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_188d40q" sourceRef="Activity_00izw75" targetRef="Event_1awm4jl" />
+      <bpmn:scriptTask id="Activity_0n6zcj5" name="Assign Department Name and Id" scriptFormat="JavaScript">
+        <bpmn:incoming>Flow_1gysraj</bpmn:incoming>
+        <bpmn:outgoing>Flow_0r375ko</bpmn:outgoing>
+        <bpmn:script>userObj1.departmentId=21;
+userObj1.departmentName="IT";</bpmn:script>
+      </bpmn:scriptTask>
+      <bpmn:scriptTask id="Activity_00izw75" name="Assign Department Director" scriptFormat="JavaScript">
+        <bpmn:incoming>Flow_0r375ko</bpmn:incoming>
+        <bpmn:outgoing>Flow_188d40q</bpmn:outgoing>
+        <bpmn:script>userObj1.departmentDirector="Jon";</bpmn:script>
+      </bpmn:scriptTask>
+    </bpmn:subProcess>
+    <bpmn:sequenceFlow id="Flow_1ozgpdu" sourceRef="Activity_1rap3m0" targetRef="Activity_1kyizg8" />
+    <bpmn:sequenceFlow id="Flow_0en49zy" sourceRef="Activity_1kyizg8" targetRef="Activity_1r3yywj" />
+    <bpmn:scriptTask id="Activity_1r3yywj" name="Print User Obj1" scriptFormat="JavaScript">
+      <bpmn:incoming>Flow_0en49zy</bpmn:incoming>
+      <bpmn:outgoing>Flow_1dkzsr4</bpmn:outgoing>
+      <bpmn:script>print("userObj1 After Executing Embedded Subprocess ::"+JSON.stringify(userObj1));</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:endEvent id="Event_1gz5bva">
+      <bpmn:incoming>Flow_1dkzsr4</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1dkzsr4" sourceRef="Activity_1r3yywj" targetRef="Event_1gz5bva" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="subprocess_execute">
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
-        <dc:Bounds x="179" y="79" width="36" height="36" />
+        <dc:Bounds x="179" y="169" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_149g4s4_di" bpmnElement="Activity_1lgdi2h">
-        <dc:Bounds x="280" y="57" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0rbckpm_di" bpmnElement="Event_0rbckpm">
-        <dc:Bounds x="1102" y="79" width="36" height="36" />
+        <dc:Bounds x="280" y="147" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_110gh08" bpmnElement="Activity_1njxhp3">
-        <dc:Bounds x="680" y="57" width="100" height="80" />
+        <dc:Bounds x="680" y="147" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0il77ki_di" bpmnElement="Activity_02mll2r">
-        <dc:Bounds x="480" y="57" width="100" height="80" />
+        <dc:Bounds x="480" y="147" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_1jf3amj" bpmnElement="Activity_1rap3m0">
-        <dc:Bounds x="880" y="58" width="100" height="80" />
+        <dc:Bounds x="880" y="148" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Flow_13mdasl_di" bpmnElement="Flow_13mdasl">
-        <di:waypoint x="380" y="97" />
-        <di:waypoint x="480" y="97" />
+      <bpmndi:BPMNShape id="Activity_0ylci6x_di" bpmnElement="Activity_1r3yywj">
+        <dc:Bounds x="1710" y="147" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1gz5bva_di" bpmnElement="Event_1gz5bva">
+        <dc:Bounds x="1932" y="169" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_15rbiyl_di" bpmnElement="Activity_1kyizg8" isExpanded="true">
+        <dc:Bounds x="1100" y="82" width="490" height="210" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_08uohli_di" bpmnElement="Event_08uohli">
+        <dc:Bounds x="1122" y="162" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1awm4jl_di" bpmnElement="Event_1awm4jl">
+        <dc:Bounds x="1532" y="162" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0m2ja6i_di" bpmnElement="Activity_0n6zcj5">
+        <dc:Bounds x="1210" y="140" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1edzlp3_di" bpmnElement="Activity_00izw75">
+        <dc:Bounds x="1370" y="140" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1gysraj_di" bpmnElement="Flow_1gysraj">
+        <di:waypoint x="1158" y="180" />
+        <di:waypoint x="1210" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0r375ko_di" bpmnElement="Flow_0r375ko">
+        <di:waypoint x="1310" y="180" />
+        <di:waypoint x="1370" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_188d40q_di" bpmnElement="Flow_188d40q">
+        <di:waypoint x="1470" y="180" />
+        <di:waypoint x="1532" y="180" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0y5jyf6_di" bpmnElement="Flow_0y5jyf6">
-        <di:waypoint x="215" y="97" />
-        <di:waypoint x="280" y="97" />
+        <di:waypoint x="215" y="187" />
+        <di:waypoint x="280" y="187" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1ty2xpg_di" bpmnElement="Flow_1ty2xpg">
-        <di:waypoint x="780" y="97" />
-        <di:waypoint x="830" y="97" />
-        <di:waypoint x="830" y="98" />
-        <di:waypoint x="880" y="98" />
+      <bpmndi:BPMNEdge id="Flow_13mdasl_di" bpmnElement="Flow_13mdasl">
+        <di:waypoint x="380" y="187" />
+        <di:waypoint x="480" y="187" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0dgiifq_di" bpmnElement="Flow_0dgiifq">
-        <di:waypoint x="580" y="97" />
-        <di:waypoint x="680" y="97" />
+        <di:waypoint x="580" y="187" />
+        <di:waypoint x="680" y="187" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1xhwg2f_di" bpmnElement="Flow_1xhwg2f">
-        <di:waypoint x="980" y="98" />
-        <di:waypoint x="1041" y="98" />
-        <di:waypoint x="1041" y="97" />
-        <di:waypoint x="1102" y="97" />
+      <bpmndi:BPMNEdge id="Flow_1ty2xpg_di" bpmnElement="Flow_1ty2xpg">
+        <di:waypoint x="780" y="187" />
+        <di:waypoint x="830" y="187" />
+        <di:waypoint x="830" y="188" />
+        <di:waypoint x="880" y="188" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ozgpdu_di" bpmnElement="Flow_1ozgpdu">
+        <di:waypoint x="980" y="188" />
+        <di:waypoint x="1100" y="188" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0en49zy_di" bpmnElement="Flow_0en49zy">
+        <di:waypoint x="1590" y="187" />
+        <di:waypoint x="1710" y="187" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1dkzsr4_di" bpmnElement="Flow_1dkzsr4">
+        <di:waypoint x="1810" y="187" />
+        <di:waypoint x="1932" y="187" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
