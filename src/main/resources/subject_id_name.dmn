@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:camunda="http://camunda.org/schema/1.0/dmn" id="Definitions_04gepht" name="DRD" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="5.26.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.21.0">
+  <decision id="subject_id_name_dmn" name="Get Subject Name">
+    <decisionTable id="DecisionTable_0kajf8i">
+      <input id="Input_1" label="Subject Id" camunda:inputVariable="subjectId">
+        <inputExpression id="InputExpression_1" typeRef="integer" expressionLanguage="javascript">
+          <text>subjectObj.id;</text>
+        </inputExpression>
+      </input>
+      <output id="Output_1" label="Subject Name" name="subjectName" typeRef="string" />
+      <rule id="DecisionRule_06cqs89">
+        <inputEntry id="UnaryTests_0dbc565">
+          <text>1</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_09iphjj">
+          <text>"English"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_03j9ydh">
+        <inputEntry id="UnaryTests_0rokv5z">
+          <text>2</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0ki1ehg">
+          <text>"Mathematics"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0u8t49s">
+        <inputEntry id="UnaryTests_09wmdge">
+          <text>3</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1ytk0w7">
+          <text>"Science"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0g4vhlw">
+        <inputEntry id="UnaryTests_0wo9q5m">
+          <text>4</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0j0dpdq">
+          <text>"Social Studies"</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram>
+      <dmndi:DMNShape dmnElementRef="subject_id_name_dmn">
+        <dc:Bounds height="80" width="180" x="160" y="100" />
+      </dmndi:DMNShape>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>

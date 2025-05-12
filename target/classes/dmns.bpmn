@@ -25,13 +25,68 @@ obj;</bpmn:script>
     <bpmn:sequenceFlow id="Flow_1b1hxzk" sourceRef="Activity_1mi5zim" targetRef="Activity_1ejz69y" />
     <bpmn:scriptTask id="Activity_1ejz69y" name="Print Output from first DMN" scriptFormat="JavaScript">
       <bpmn:incoming>Flow_1b1hxzk</bpmn:incoming>
-      <bpmn:outgoing>Flow_1ywj16l</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0kd7go0</bpmn:outgoing>
       <bpmn:script>print("Output from 1st DMN :: (Is Eligible For Loan) :: "+isEligibleForLoan);</bpmn:script>
     </bpmn:scriptTask>
-    <bpmn:endEvent id="Event_1m8elg4">
-      <bpmn:incoming>Flow_1ywj16l</bpmn:incoming>
+    <bpmn:sequenceFlow id="Flow_0kd7go0" sourceRef="Activity_1ejz69y" targetRef="Activity_0itrorp" />
+    <bpmn:businessRuleTask id="Activity_0itrorp" name="Loan Eligibility with Discount" camunda:resultVariable="loanEligibilityWithDiscount" camunda:decisionRef="loan_eligibility_with_discount_dmn" camunda:mapDecisionResult="singleResult">
+      <bpmn:incoming>Flow_0kd7go0</bpmn:incoming>
+      <bpmn:outgoing>Flow_0iczdie</bpmn:outgoing>
+    </bpmn:businessRuleTask>
+    <bpmn:scriptTask id="Activity_0nbyr6i" name="Print Output from second DMN" scriptFormat="JavaScript">
+      <bpmn:incoming>Flow_0iczdie</bpmn:incoming>
+      <bpmn:outgoing>Flow_0ocui97</bpmn:outgoing>
+      <bpmn:script>print("Output from 2nd DMN :: (Loan Eligibility with Discount) :: "+loanEligibilityWithDiscount);
+
+print("Discount :: "+loanEligibilityWithDiscount.get("discount"));
+
+print("Is Eligible For Loan :: "+loanEligibilityWithDiscount.get("isEligibleForLoan"));</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:sequenceFlow id="Flow_0iczdie" sourceRef="Activity_0itrorp" targetRef="Activity_0nbyr6i" />
+    <bpmn:sequenceFlow id="Flow_0ocui97" sourceRef="Activity_0nbyr6i" targetRef="Activity_1dca089" />
+    <bpmn:scriptTask id="Activity_1dca089" name="Initialize Subject" scriptFormat="JavaScript" camunda:resultVariable="subjectObj">
+      <bpmn:incoming>Flow_0ocui97</bpmn:incoming>
+      <bpmn:outgoing>Flow_1oiqmzn</bpmn:outgoing>
+      <bpmn:script>var obj={
+id:2,
+name:null,
+displayName: null,
+code: null,
+subjectTeacherId: null,
+subjectTeacherName: null
+};
+obj;</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:sequenceFlow id="Flow_1oiqmzn" sourceRef="Activity_1dca089" targetRef="Activity_1jh3ox2" />
+    <bpmn:businessRuleTask id="Activity_1jh3ox2" name="Get Subject Name" camunda:resultVariable="subjectName" camunda:decisionRef="subject_id_name_dmn" camunda:mapDecisionResult="singleEntry">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:outputParameter name="temp">
+            <camunda:script scriptFormat="JavaScript">subjectObj.name=subjectName;
+
+print("subjectObj after assigning name ::"+JSON.stringify(subjectObj));</camunda:script>
+          </camunda:outputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1oiqmzn</bpmn:incoming>
+      <bpmn:outgoing>Flow_1m3nm1y</bpmn:outgoing>
+    </bpmn:businessRuleTask>
+    <bpmn:sequenceFlow id="Flow_1m3nm1y" sourceRef="Activity_1jh3ox2" targetRef="Activity_01jaqnk" />
+    <bpmn:businessRuleTask id="Activity_01jaqnk" name="Errors for Subject Name and Code" camunda:resultVariable="subjectInfoError" camunda:decisionRef="subject_code_name_error_dmn" camunda:mapDecisionResult="singleEntry">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:outputParameter name="temp">
+            <camunda:script scriptFormat="JavaScript">print("subjectInfoError ::"+subjectInfoError);</camunda:script>
+          </camunda:outputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1m3nm1y</bpmn:incoming>
+      <bpmn:outgoing>Flow_0pgd4ou</bpmn:outgoing>
+    </bpmn:businessRuleTask>
+    <bpmn:endEvent id="Event_0n6nq5f">
+      <bpmn:incoming>Flow_0pgd4ou</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_1ywj16l" sourceRef="Activity_1ejz69y" targetRef="Event_1m8elg4" />
+    <bpmn:sequenceFlow id="Flow_0pgd4ou" sourceRef="Activity_01jaqnk" targetRef="Event_0n6nq5f" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="dmns_execute">
@@ -49,8 +104,28 @@ obj;</bpmn:script>
       <bpmndi:BPMNShape id="Activity_1mjs1m9_di" bpmnElement="Activity_1ejz69y">
         <dc:Bounds x="680" y="57" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1m8elg4_di" bpmnElement="Event_1m8elg4">
-        <dc:Bounds x="872" y="79" width="36" height="36" />
+      <bpmndi:BPMNShape id="Activity_0w2shc6_di" bpmnElement="Activity_0itrorp">
+        <dc:Bounds x="870" y="57" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_13ws40t" bpmnElement="Activity_0nbyr6i">
+        <dc:Bounds x="1040" y="57" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_11gwp42_di" bpmnElement="Activity_1dca089">
+        <dc:Bounds x="1210" y="57" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1khslau_di" bpmnElement="Activity_1jh3ox2">
+        <dc:Bounds x="1380" y="57" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1ix438s_di" bpmnElement="Activity_01jaqnk">
+        <dc:Bounds x="1550" y="57" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0n6nq5f_di" bpmnElement="Event_0n6nq5f">
+        <dc:Bounds x="1722" y="79" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_1x3k6h3_di" bpmnElement="Flow_1x3k6h3">
         <di:waypoint x="215" y="97" />
@@ -64,9 +139,29 @@ obj;</bpmn:script>
         <di:waypoint x="590" y="97" />
         <di:waypoint x="680" y="97" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1ywj16l_di" bpmnElement="Flow_1ywj16l">
+      <bpmndi:BPMNEdge id="Flow_0kd7go0_di" bpmnElement="Flow_0kd7go0">
         <di:waypoint x="780" y="97" />
-        <di:waypoint x="872" y="97" />
+        <di:waypoint x="870" y="97" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0iczdie_di" bpmnElement="Flow_0iczdie">
+        <di:waypoint x="970" y="97" />
+        <di:waypoint x="1040" y="97" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ocui97_di" bpmnElement="Flow_0ocui97">
+        <di:waypoint x="1140" y="97" />
+        <di:waypoint x="1210" y="97" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1oiqmzn_di" bpmnElement="Flow_1oiqmzn">
+        <di:waypoint x="1310" y="97" />
+        <di:waypoint x="1380" y="97" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1m3nm1y_di" bpmnElement="Flow_1m3nm1y">
+        <di:waypoint x="1480" y="97" />
+        <di:waypoint x="1550" y="97" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0pgd4ou_di" bpmnElement="Flow_0pgd4ou">
+        <di:waypoint x="1650" y="97" />
+        <di:waypoint x="1722" y="97" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
