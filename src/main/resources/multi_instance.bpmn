@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0jnjjd2" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.26.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.21.0">
+  <bpmn:process id="multi_instance_execute" name="multi_instance_execute" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_11gu4hc</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_11gu4hc" sourceRef="StartEvent_1" targetRef="Activity_0ti90i4" />
+    <bpmn:serviceTask id="Activity_0ti90i4" name="Initialize Subject List" camunda:delegateExpression="${subjectsInitialize}">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:outputParameter name="temp">
+            <camunda:script scriptFormat="JavaScript">print('Initialized Subject List :: '+subjectList);</camunda:script>
+          </camunda:outputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_11gu4hc</bpmn:incoming>
+      <bpmn:outgoing>Flow_16ayc8y</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_16ayc8y" sourceRef="Activity_0ti90i4" targetRef="Activity_0unxmd4" />
+    <bpmn:scriptTask id="Activity_0unxmd4" name="Assign Subject Name" scriptFormat="JavaScript">
+      <bpmn:incoming>Flow_16ayc8y</bpmn:incoming>
+      <bpmn:outgoing>Flow_1el5kg3</bpmn:outgoing>
+      <bpmn:multiInstanceLoopCharacteristics isSequential="true" camunda:collection="${subjectList}" camunda:elementVariable="subjectObj">
+        <bpmn:loopCardinality xsi:type="bpmn:tFormalExpression">${subjectList.size()}</bpmn:loopCardinality>
+      </bpmn:multiInstanceLoopCharacteristics>
+      <bpmn:script>print("subjectObj id ::"+subjectObj.get("id"));
+
+var id=subjectObj.get("id");
+if(id==1){
+subjectObj.put("name","English");
+}
+else if(id==2){
+subjectObj.put("name","Mathematics");
+}
+else if(id==3){
+subjectObj.put("name","Science");
+}
+else if(id==4){
+subjectObj.put("name","Social Studies");
+}</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:sequenceFlow id="Flow_1el5kg3" sourceRef="Activity_0unxmd4" targetRef="Activity_0trw908" />
+    <bpmn:scriptTask id="Activity_0trw908" name="Print SubjectList after assigning name" scriptFormat="JavaScript">
+      <bpmn:incoming>Flow_1el5kg3</bpmn:incoming>
+      <bpmn:outgoing>Flow_0im7n7h</bpmn:outgoing>
+      <bpmn:script>print("subjectList after assigning name :: "+subjectList);</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:sequenceFlow id="Flow_0im7n7h" sourceRef="Activity_0trw908" targetRef="Activity_1qcm0ti" />
+    <bpmn:serviceTask id="Activity_1qcm0ti" name="Assign Display Name" camunda:delegateExpression="${subjectDisplayNameAssign}">
+      <bpmn:incoming>Flow_0im7n7h</bpmn:incoming>
+      <bpmn:outgoing>Flow_1ej6c0d</bpmn:outgoing>
+      <bpmn:multiInstanceLoopCharacteristics camunda:collection="${subjectList}" camunda:elementVariable="subjectObj">
+        <bpmn:loopCardinality xsi:type="bpmn:tFormalExpression">${subjectList.size()}</bpmn:loopCardinality>
+      </bpmn:multiInstanceLoopCharacteristics>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1ej6c0d" sourceRef="Activity_1qcm0ti" targetRef="Activity_06v7uxx" />
+    <bpmn:endEvent id="Event_03f6qdy">
+      <bpmn:incoming>Flow_1qmd50i</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1qmd50i" sourceRef="Activity_06v7uxx" targetRef="Event_03f6qdy" />
+    <bpmn:scriptTask id="Activity_06v7uxx" name="Print subjectList after assigning display name" scriptFormat="JavaScript">
+      <bpmn:incoming>Flow_1ej6c0d</bpmn:incoming>
+      <bpmn:outgoing>Flow_1qmd50i</bpmn:outgoing>
+      <bpmn:script>print("subjectList after assigning display name :: "+subjectList);</bpmn:script>
+    </bpmn:scriptTask>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="multi_instance_execute">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="159" y="89" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1bdvok9_di" bpmnElement="Activity_0ti90i4">
+        <dc:Bounds x="250" y="67" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0stq3bq_di" bpmnElement="Activity_0unxmd4">
+        <dc:Bounds x="410" y="67" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ilwjid_di" bpmnElement="Activity_0trw908">
+        <dc:Bounds x="570" y="67" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1vjrnp1_di" bpmnElement="Activity_1qcm0ti">
+        <dc:Bounds x="730" y="67" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_03f6qdy_di" bpmnElement="Event_03f6qdy">
+        <dc:Bounds x="1052" y="89" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0kcssut_di" bpmnElement="Activity_06v7uxx">
+        <dc:Bounds x="890" y="67" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_11gu4hc_di" bpmnElement="Flow_11gu4hc">
+        <di:waypoint x="195" y="107" />
+        <di:waypoint x="250" y="107" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_16ayc8y_di" bpmnElement="Flow_16ayc8y">
+        <di:waypoint x="350" y="107" />
+        <di:waypoint x="410" y="107" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1el5kg3_di" bpmnElement="Flow_1el5kg3">
+        <di:waypoint x="510" y="107" />
+        <di:waypoint x="570" y="107" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0im7n7h_di" bpmnElement="Flow_0im7n7h">
+        <di:waypoint x="670" y="107" />
+        <di:waypoint x="730" y="107" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ej6c0d_di" bpmnElement="Flow_1ej6c0d">
+        <di:waypoint x="830" y="107" />
+        <di:waypoint x="890" y="107" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1qmd50i_di" bpmnElement="Flow_1qmd50i">
+        <di:waypoint x="990" y="107" />
+        <di:waypoint x="1052" y="107" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
